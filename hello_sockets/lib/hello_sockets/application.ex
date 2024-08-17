@@ -3,11 +3,16 @@ defmodule HelloSockets.Application do
   # for more information on OTP Applications
   @moduledoc false
 
+  alias HelloSockets.Pipeline.Producer
+  alias HelloSockets.Pipeline.ConsumerSupervisor, as: Consumer
+
   use Application
 
   @impl true
   def start(_type, _args) do
     children = [
+      {Producer, name: Producer},
+      {Consumer, subscribe_to: [{Producer, max_demand: 10, min_demand: 5}]},
       HelloSocketsWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:hello_sockets, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: HelloSockets.PubSub},

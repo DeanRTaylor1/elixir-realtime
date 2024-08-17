@@ -3,6 +3,7 @@ defmodule HelloSocketsWeb.UserSocket do
 
   channel "ping", HelloSocketsWeb.PingChannel
   channel "wild:*", HelloSocketsWeb.WildcardChannel
+  channel "dupe", HelloSocketsWeb.DedupeChannel
 
   def connect(_params, socket, _connect_info) do
     {:ok, socket}
