@@ -2,6 +2,8 @@ defmodule HelloSockets.Pipeline.Producer do
   # This module implements a GenStage producer
   use GenStage
 
+  alias HelloSockets.Pipeline.Timing
+
   # Function to start the GenStage process
   def start_link(opts) do
     # Split the options to extract the name
@@ -26,6 +28,15 @@ defmodule HelloSockets.Pipeline.Producer do
   def push(item = %{}) do
     # Cast a message to the producer to notify about the new item
     GenStage.cast(__MODULE__, {:notify, item})
+  end
+
+  def push_timed(item = %{}) do
+    # Cast a message to the producer to notify about the new item
+    GenStage.cast(__MODULE__, {:notify_timed, item, Timing.unix_ms_now()})
+  end
+
+  def handle_cast({:notify_timed, item, unix_md}, state) do
+    {:noreply, [%{item: item, enqueued_at: unix_md}], state}
   end
 
   # Handle the push notification

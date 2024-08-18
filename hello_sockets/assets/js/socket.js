@@ -60,4 +60,13 @@ dupeChannel.on("number", (payload) => {
 
 dupeChannel.join()
 
+const authUserChannel = authSocket.channel(`user:${window.userId}`)
+authUserChannel.on("push", (payload) => {
+  console.log("push received", payload)
+})
+
+authUserChannel.on("push_timed", (payload) => {
+  console.log("push_timed received", payload)
+})
+
 export default socket
